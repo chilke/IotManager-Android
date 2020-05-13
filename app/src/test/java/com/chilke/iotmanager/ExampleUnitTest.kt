@@ -71,5 +71,20 @@ class ExampleUnitTest {
         msg = devInfoMsg
 
         println(Gson().toJson(msg))
+
+        val devStMsg = MqttDeviceStateMessage()
+        val devSt = IotDimmerState()
+        devSt.curValues[0] = 1024
+        devSt.curValues[1] = 2048
+        devStMsg.state = devSt
+        msg = devStMsg
+        println(Gson().toJson(msg))
+
+        val addScMsg = MqttAddScheduleMessage()
+        val sch = IotSchedule()
+
+        addScMsg.schedule = sch
+        msg = addScMsg
+        println(Gson().toJson(msg))
     }
 }
