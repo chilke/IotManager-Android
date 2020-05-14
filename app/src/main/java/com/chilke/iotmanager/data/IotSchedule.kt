@@ -10,5 +10,5 @@ class IotSchedule {
     @SerializedName("mn") var minute = 0
     @SerializedName("ds") var days: Array<Int>? = null
     @SerializedName("st") var state: IotDeviceState? = null
-    @SerializedName("id") var id = 0
+    @SerializedName("id") var id: Int? = null
 }

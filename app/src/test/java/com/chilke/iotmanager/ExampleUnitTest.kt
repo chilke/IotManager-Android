@@ -82,7 +82,14 @@ class ExampleUnitTest {
 
         val addScMsg = MqttAddScheduleMessage()
         val sch = IotSchedule()
-
+        sch.year = 2020
+        sch.month = 5
+        sch.day = 13
+        sch.hour = 21
+        sch.minute = 48
+        devSt.curValues[0] = 0
+        devSt.curValues[1] = 0
+        sch.state = devSt
         addScMsg.schedule = sch
         msg = addScMsg
         println(Gson().toJson(msg))
