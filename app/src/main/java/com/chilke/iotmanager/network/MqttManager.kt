@@ -10,6 +10,7 @@ import com.amazonaws.regions.Regions
 import com.amazonaws.services.iot.AWSIotClient
 import com.amazonaws.services.iot.model.AttachPolicyRequest
 import com.amazonaws.services.iot.model.ListAttachedPoliciesRequest
+import com.chilke.iotmanager.data.GsonHelper
 import com.chilke.iotmanager.data.mqtt.MqttGetDevicesMessage
 import com.chilke.iotmanager.data.mqtt.MqttMessage
 import com.google.gson.Gson
@@ -23,15 +24,20 @@ object MqttManager {
     private const val IOT_POLICY_NAME = "IotManagerApp"
     private const val IOT_ENDPOINT = "a1r32q860r2zlh-ats.iot.us-east-2.amazonaws.com"
     private const val RECV_TOPIC = "to/apps"
-    private const val BROADCAST_TOPIC = "to/devices"
+    private const val BROADCAST_TOPIC = "to/devs"
 
     private val REGION = Regions.US_EAST_2
     private val clientID = UUID.randomUUID().toString()
     private lateinit var awsMqttManager: AWSIotMqttManager
 
+    private val prettyGson: Gson
+    init {
+        prettyGson = GsonBuilder().setPrettyPrinting().create()
+    }
+
     private val gson: Gson
     init {
-        gson = GsonBuilder().create()
+        gson = GsonHelper.create()
     }
 
     private val mqttSubscriptionCallback = object: AWSIotMqttSubscriptionStatusCallback {
@@ -50,6 +56,10 @@ object MqttManager {
             try {
                 val message = String(data!!)
                 Log.i(TAG, "MQTT message received on topic: $topic\n$message")
+
+                val msg = gson.fromJson(message, MqttMessage::class.java)
+                Log.i(TAG, "Type: ${msg::class.simpleName}")
+                Log.i(TAG, "\n${prettyGson.toJson(msg)}")
             } catch (ex: Exception) {
                 Log.e(TAG, "MQTT message receive exception: ", ex)
             }
